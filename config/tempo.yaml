@@ -1,0 +1,27 @@
+stream_jobs: {}
+server:
+  http_listen_port: 3200
+
+initializer:
+
+kvstore:
+  store: inmemory
+
+ingester:
+  lifecycler:
+    ring:
+      kvstore:
+        store: inmemory
+      replication_factor: 1
+
+compactor:
+  compaction:
+    block_Retention: 1h
+
+storage:
+  trace:
+    backend: local
+    local:
+      path: /tmp/tempo/traces
+    wal:
+      path: /tmp/tempo/wal
