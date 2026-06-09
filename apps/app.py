@@ -4,9 +4,15 @@ import random
 import logging
 import requests
 from fastapi import FastAPI, Response, HTTPException
+from opentelemetry.instrumentation.logging import LoggingInstrumentor
+
+LoggingInstrumentor().instrument(set_logging_format=True)
 
 # Configure standard Python logging to output JSON-like structure for Loki
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] [trace_id=%(otelTraceID)s span_id=%(otelSpanID)s] %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()

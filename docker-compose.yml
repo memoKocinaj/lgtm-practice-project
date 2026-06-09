@@ -1,4 +1,3 @@
-version: "3.8"
 
 services:
   # --- MICROSERVICES ---
@@ -60,8 +59,7 @@ services:
     volumes:
       - ./config/tempo.yaml:/etc/tempo/tempo.yaml
     ports:
-      - "3200:3200" # Tempo HTTP API (Grafana talks to this)
-      - "4317:4317" # OTLP gRPC (Collector pushes traces here)
+      - "3200:3200"
 
   mimir:
     image: grafana/mimir:2.11.0
