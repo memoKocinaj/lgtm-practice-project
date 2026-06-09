@@ -60,34 +60,22 @@ services:
       - ./config/tempo.yaml:/etc/tempo/tempo.yaml
     ports:
       - "3200:3200"
+#
+#  mimir:
+#    image: grafana/mimir:2.11.0
+#    command: ["-ingenerate-config-file=true", "-target=all"]
+#    ports:
+#      - "9009:9009"
 
-  mimir:
-    image: grafana/mimir:2.11.0
-    command: ["-ingenerate-config-file=true", "-target=all"]
-    ports:
-      - "9009:9009"
-
-  # We use standard Prometheus to scrape the OTel collector and pass it to Grafana for easier setup
   prometheus:
     image: prom/prometheus:v2.49.1
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        cat <<EOF > /etc/prometheus/prometheus.yml
-        global:
-          scrape_interval: 5s
-        scrape_configs:
-          - job_name: 'otel-collector'
-            static_configs:
-              - targets: ['otel-collector:8889']
-        EOF
-        /bin/prometheus "$$@"
+      - --config.file=/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
-  
+    
   grafana:
     image: grafana/grafana:10.3.3
     ports:
